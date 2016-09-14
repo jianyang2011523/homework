@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>shanxing</title>
+    <script src="jquery-3.1.0.js"></script>
+</head>
+<body>
+
+<canvas width="1000" height="1000" id="mycanvas"></canvas>
+
+<script >
+    var mycanvas=document.getElementById("mycanvas");
+    var otex=mycanvas.getContext("2d");
+
+    otex.beginPath();
+    otex.arc(300,300,200,0,2*Math.PI);
+    otex.fillStyle="grey";
+    otex.fill();
+    otex.closePath();
+    otex.stroke();
+
+
+    otex.save();
+    otex.translate(300, 300);
+    otex.beginPath();
+    otex.fillStyle="yellow";
+    otex.arc(0,0,200,Math.PI/2,3*Math.PI/4);
+    otex.save();
+    otex.rotate(3*Math.PI/4);
+    otex.moveTo(200,0);
+
+    otex.lineTo(0,0);
+
+    otex.restore();
+
+    otex.rotate(Math.PI/2);
+
+    otex.lineTo(200,0);
+    otex.fill();
+    otex.closePath();
+
+    otex.restore();
+
+    otex.save();
+    otex.translate(300, 300);
+    otex.beginPath();
+    otex.fillStyle="blue";
+    otex.arc(0,0,200,-Math.PI/3,Math.PI/2);
+    otex.save();
+    otex.rotate(Math.PI/2);
+    otex.moveTo(200,0);
+    // 连接到圆心
+    otex.lineTo(0,0);
+    // 还原
+    otex.restore();
+    // 旋转至起点角度
+    otex.rotate(-Math.PI/3);
+    // 从圆心连接到起点
+    otex.lineTo(200,0);
+    otex.fill();
+    otex.closePath();
+    // 还原到最初保存的状态
+    otex.restore();
+
+</script>
+</body>
+
+</html>

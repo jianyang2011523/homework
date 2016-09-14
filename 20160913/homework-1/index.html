@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        /*#mycanvas{*/
+            /*background-color: black;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<canvas id="mycanvas" width="500" height="500">
+    当前浏览器不支持canvas
+</canvas>
+<script>
+    var mycanvas=document.getElementById("mycanvas");
+    var otex=mycanvas.getContext("2d");
+    otex.beginPath();
+    otex.arc(250,250,250,0,Math.PI*2);
+    otex.fillStyle="#cd2e3e";
+    otex.fill();
+    otex.closePath();
+
+    otex.beginPath();
+    otex.arc(250,250,200,0,Math.PI*2);
+    otex.fillStyle="#fff";
+    otex.fill();
+    otex.closePath();
+
+    otex.beginPath();
+    otex.arc(250,250,150,0,Math.PI*2);
+    otex.fillStyle="#cd2e3e";
+    otex.fill();
+    otex.closePath();
+
+    otex.beginPath();
+    otex.arc(250,250,100,0,Math.PI*2);
+    otex.fillStyle="#02468d";
+    otex.fill();
+    otex.closePath();
+
+    otex.beginPath();
+    otex.moveTo(250,150);
+    for(i=0;i<11;i+=2){
+        var ox=100*Math.cos(i*72*Math.PI/180-Math.PI/2)+250;
+        var oy=100*Math.sin(i*72*Math.PI/180-Math.PI/2)+250;
+        otex.lineTo(ox,oy);
+    }
+    otex.closePath();
+    otex.stroke();
+    otex.fillStyle="#fff";
+    otex.fill();
+    otex.closePath();
+</script>
+</body>
+</html>
