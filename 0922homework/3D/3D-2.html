@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style id="ostyle">
+		*{margin: 0;padding: 0;list-style: none;}
+		#banner{width: 800px;height:360px;position: relative;overflow: hidden;margin: 100px auto;}
+		#list{width: 800px;height:360px; }
+		#list li{height: 360px;float:left;transform-style: preserve-3d;transform-origin: center center -180px; }
+		#list li a{height: 360px;position: absolute;width: 100%;}
+		a:nth-child(1){
+			background: url(1.jpg) no-repeat;
+		}
+		
+		a:nth-child(2){
+			background: url(5.jpg) no-repeat;top: -360px;
+			transform: rotateX(90deg);transform-origin: bottom;
+		}
+		a:nth-child(3){
+			background: url(2.png) no-repeat;
+			transform: translateZ(-360px) rotateX(180deg);
+		}
+		a:nth-child(4){
+			background: url(4.jpg) no-repeat;top: 360px;
+			transform: rotateX(-90deg);transform-origin: top;
+		}
+		#ctrl{position: absolute;right: 20px;bottom: 20px;}
+		#ctrl li{width: 30px; height: 30px;margin-right: 20px; float: left;background: rgba(150,150,150,0.8);}
+	</style>
+	<body>
+		<div id="banner">
+			<ul id="list">
+				
+			</ul>
+			<ul id="ctrl">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+			
+		</div>
+	</body>
+	<script>
+		var obanner = document.getElementById("banner");
+		var olist = document.getElementById("list");
+		var oli = olist.getElementsByTagName("li");
+		var octrl = document.getElementById("ctrl");
+		var akey = octrl.getElementsByTagName("li");
+		var ostyle = document.getElementById("ostyle");
+		var uim = 40;//个数
+		var oliwidth = olist.clientWidth/uim;
+		var sli = "";
+		var ost = "";
+		for (var i = 0;i<uim;i++) {
+			sli += "<li><a></a><a></a><a></a><a></a></li>";
+			ost += "#list li:nth-child("+(i+1)+") a{background-position:-"+i*oliwidth+"px}";
+		}
+		olist.innerHTML = sli;
+		ostyle.innerHTML+=ost;
+		for (var i = 0;i<uim;i++) {
+			oli[i].style.width = oliwidth+"px";
+		}
+		for (var i=0;i<akey.length;i++) {
+			akey[i].index = i;
+			akey[i].onclick = function  () {
+				for (var j=0;j<uim;j++) {
+					oli[j].style.transition = 500+j*50+"ms";
+					oli[j].style.transform = "rotateX("+this.index*90+"deg)";
+				}
+			}
+		}
+	</script>
+</html>
