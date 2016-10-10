@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,inital-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>注册页面</title>
+    <link rel="stylesheet" href="css/base.css"/>
+    <script src="js/jQuery.v2.1.4.js"></script>
+</head>
+<body>
+
+<div class="header">
+    <a href="javascript:history.go(-1)" class="back"></a>
+    <span>注册</span>
+    <a href="login.html" class="btn-right">登录</a>
+</div>
+
+<div class="container">
+
+    <div class="register">
+        <label class="input-label">
+            <input type="text" placeholder="账号" id="user"/>
+
+        </label>
+        <div id="message"></div>
+        <label class="input-label">
+            <input type="password" placeholder="密码" id="pwd"/>
+        </label>
+        <label class="input-label">
+            <input type="password" placeholder="重复密码" id="repwd"/>
+        </label>
+
+        <button class="btn-submit" id="register">同意服务协议并且注册</button>
+    </div>
+
+</div>
+
+<div class="footer">
+    <a href="" class="foot-btn">
+        <img src="img/home.png" alt="首页"/>
+        <span>首页</span>
+    </a>
+    <a href="" class="foot-btn">
+        <img src="img/menu.png" alt="分类"/>
+        <span>分类</span>
+    </a>
+    <a href="" class="foot-btn">
+        <img src="img/order.png" alt="购物车"/>
+        <span>购物车</span>
+    </a>
+    <a href="" class="foot-btn">
+        <img src="img/user.png" alt="我的秀"/>
+        <span>我的秀</span>
+    </a>
+    <a href="" class="foot-btn">
+        <img src="img/more.png" alt="更多"/>
+        <span>更多</span>
+    </a>
+</div>
+
+</body>
+<script>
+    $(function () {
+        $("#register").bind("click", function () {
+
+            // 进行提交前的数据检查
+            if ($("#user").val() == "") {
+                $("#message").text("该账号可以使用！");
+                return false;
+            }
+            if ($("#pwd").val() == "") {
+//                alert("密码不能为空");
+                $("#message").text("密码不能为空！").css("color", "red");
+                return false;
+            }
+            if ($("#pwd").val() != $("#repwd").val()) {
+//                alert("两次密码输入不一致，请正确输入");
+                $("#message").text("两次密码输入不一致，请正确输入！").css("color", "red");
+                return false;
+            }
+
+
+            // 发送get请求，进行返回处理
+            $.post(
+                    "http://datainfo.duapp.com/shopdata/userinfo.php",
+                    {
+                        status: "register",
+                        userID: $("#user").val(),
+                        password: $("#pwd").val(),
+                    },
+                    function (data) {
+                        if (data == 0) {
+//                        alert("用户名已经注册，请更换");
+                            $("#message").text("用户名已经注册，请更换!").css("color", "red");
+                        }
+                        if (data == 1) {
+//                        alert("恭喜您注册成功");
+                            $("#message").text("恭喜您注册成功").css("color", "green");
+                        }
+                        if (data == 2) {
+//                        alert("数据包出错啦");
+                            $("#message").text("数据包出错啦").css("color", "red");
+                        }
+                    }
+            )
+        })
+
+    })
+</script>
+</html>

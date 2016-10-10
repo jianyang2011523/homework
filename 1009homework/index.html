@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,inital-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <title>ZXIU 走秀网</title>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/swiper.min.css"/>
+    <script src="js/jQuery.v2.1.4.js"></script>
+    <script src="js/swiper.min.js"></script>
+</head>
+
+<body>
+
+<div class="header">
+    <span>ZXIU 走秀网</span>
+</div>
+
+<div class="container">
+    <div class="search-box">
+        <div><i id="search-btn"></i><a href="menu.html"><input type="text" id="ipt" placeholder="请输入搜索内容"/></a></div>
+    </div>
+    <div class="swiper-container banner">
+        <div class="swiper-wrapper">
+            <!--<div class="swiper-slide"><img src="img/banner.jpg" alt=""/></div>-->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <div class="list-item mysc">
+        <ul>
+            <!--<li>-->
+                <!--<div class="shop-pic">-->
+                    <!--<a href=""><img src="img/clothes.jpg" alt=""/></a>-->
+                <!--</div>-->
+                <!--<div class="shop-txt">-->
+                    <!--<h3><a href="">阿尼玛太阳眼镜，爆款【买一送一】</a></h3>-->
+                    <!--<div>-->
+                        <!--<div class="pirce">¥0<span>¥199</span></div>-->
+                        <!--<div class="discount">3.8折<img src="img/shop.jpg" alt=""/></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</li>-->
+
+        </ul>
+    </div>
+
+
+</div>
+
+<div class="footer">
+    <a href="index.html" class="foot-btn  active">
+        <img src="img/home.png" alt="首页"/>
+        <span>首页</span>
+    </a>
+    <a href="menu.html" class="foot-btn">
+        <img src="img/menu.png" alt="分类"/>
+        <span>分类</span>
+    </a>
+    <a href="shopcar.html" class="foot-btn">
+        <img src="img/order.png" alt="购物车"/>
+        <span>购物车</span>
+    </a>
+    <a href="user.html" class="foot-btn">
+        <img src="img/user.png" alt="我的秀"/>
+        <span>我的秀</span>
+    </a>
+    <a href="more.html" class="foot-btn">
+        <img src="img/more.png" alt="更多"/>
+        <span>更多</span>
+    </a>
+</div>
+
+</body>
+<script>
+    // 获取轮播图信息
+    $.ajax({
+        url:"http://datainfo.duapp.com/shopdata/getBanner.php",
+        data:{},
+        dataType:"JSONP",
+        success:function(data){
+
+            $.each(data,function(i){
+//                console.log( JSON.parse( data[i].goodsBenUrl)[0]);
+                $html ='<div class="swiper-slide"><img src="'+JSON.parse( data[i].goodsBenUrl)[0]+'"/></div>';
+                $(".swiper-wrapper").append($html);
+
+            });
+            var swiper = new Swiper('.banner', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true
+            });
+        }
+    });
+
+    // 获取热推商品信息
+    $.ajax({
+        url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+        data:{},
+        dataType:"JSONP",
+        success: function (data) {
+           // console.log(data);
+            $.each(data,function(i){
+                if(data[i].discount ==0){
+                    $newprice = data[i].price;
+                }else{
+                    $newprice = (data[i].price*(data[i].discount/10)).toFixed(2);
+                }
+                // 详情页页面地址
+                $link = "detailshop-js.html#goodID="+data[i].goodsID;
+                //console.log($link);
+                $html = '<li><div class="shop-pic"><a href="'+$link+'"><img src="'+data[i].goodsListImg+'"/></a></div><div class="shop-txt"><h3><a href="'+$link+'">'+data[i].goodsName+'</a></h3><div><div class="pirce">¥'+$newprice+'<span>¥'+data[i].price+'</span></div><div class="discount">'+data[i].discount+'折<img src="img/shop.jpg" alt=""/></div></div></div></li>';
+                $(".list-item").append($html);
+            });
+            // 添加li点击事件,进入详情页
+            $(".list-item li").bind("click",seeDetail);
+        }
+    });
+
+
+    // 搜索绑定事件及ajax请求数据
+    $("#search-btn").bind("click",function(){
+        $.ajax({
+            url:"http://datainfo.duapp.com/shopdata/selectGoodes.php",
+            data:{selectText:encodeURI($("#ipt").val())},
+            dataType:"JSONP",
+            success: function (data) {
+               // console.log(data);
+                if(data ==0){
+                    alert("没有相关信息");
+                }else{
+                    $(".list-item").empty();
+                    $.each(data,function(i){
+                        if(data[i].discount ==0){
+                            $newprice = data[i].price;
+                        }else{
+                            $newprice = (data[i].price*(data[i].discount/10)).toFixed(2);
+                        }
+                        $html = '<li id="'+data[i].goodsID+'"><div class="shop-pic"><img src="'+data[i].goodsListImg+'"/></div><div class="shop-txt"><h3>'+data[i].goodsName+'</h3><div><div class="pirce">¥'+$newprice+'<span>¥'+data[i].price+'</span></div><div class="discount">'+data[i].discount+'折<img src="img/shop.jpg" alt=""/></div></div></div></li>';
+                        $(".list-item").append($html);
+                    })
+                }
+
+                // 添加li点击事件,进入详情页
+                $(".list-item li").bind("click",seeDetail);
+
+            }
+        })
+    });
+
+    // 进去详情页函数
+    function seeDetail(event){
+        $self = event.target;
+        $goodID = $self.id;
+    }
+var list_item=document.getElementsByClassName("list-item");
+var  discount=document.getElementsByClassName("discount");
+ var    img=discount.getElementsByTagName("img");
+    var li=document.getElementsByTagName("li");
+    img.click=function (e) {
+        e.preventDefault();
+        var dataText = list_item["li"];
+
+        localStorage.setItem("li", dataText.value);
+    }
+
+
+
+</script>
+</html>
